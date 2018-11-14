@@ -1,0 +1,4 @@
+package: project
+import:
+    - package: github.com/stretchr/testify
+    - package: github.com/google/uuid

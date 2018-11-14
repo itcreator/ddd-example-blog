@@ -1,0 +1,8 @@
+hash: 3e8ffc7e3054b48d2205f2f0f94ef06b813c63066003de5122fb687af50cb8b3
+updated: 2018-11-13T17:11:43.090795767+03:00
+imports:
+- name: github.com/google/uuid
+  version: 9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8
+- name: github.com/stretchr/testify
+  version: 04af85275a5c7ac09d16bb3b9b2e751ed45154e5
+testImports: []

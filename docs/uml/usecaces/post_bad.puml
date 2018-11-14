@@ -1,0 +1,39 @@
+@startuml
+
+top to bottom direction
+
+
+Author -|> User
+User <|- Moderator
+
+
+rectangle "Post for all" {
+    left to right direction
+    User --> (read)
+    User --> (list)
+}
+
+rectangle "posts for author" {
+    Author --> (Create)
+    Author --> (Disable)
+    Author --> (Enable)
+    Author --> (Delete)
+    Author --> (Edit)
+}
+rectangle "posts for moderator" {
+    (Moderate) .|> (Edit)
+    Moderator --> (Moderate)
+
+    Moderator --> (Disable)
+    Moderator --> (Enable)
+    Moderator --> (Delete)
+
+
+}
+
+'User --> (Use the application) : A small label
+
+':Main Admin: ---> (Use the application) : This is\nyet another\nlabel
+
+@enduml
+

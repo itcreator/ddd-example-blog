@@ -1,0 +1,19 @@
+@startuml
+
+left to right direction
+
+actor Commentator as com
+actor "Comment editor" as editor
+actor "Comment viewer" as viewer
+
+rectangle "Comment" {
+    com --> (Comment)
+
+    editor --> (Edit)
+    editor --> (Delete)
+
+    viewer --> (View item)
+    viewer --> (View list/tree)
+}
+
+@enduml

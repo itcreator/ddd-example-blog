@@ -1,0 +1,21 @@
+@startuml
+
+left to right direction
+
+actor "Post Creator" as creator
+actor "Post Viewer" as viewer
+actor "Post Editor" as editor
+
+rectangle Post {
+    creator --> (Create)
+
+    viewer --> (View)
+    viewer --> (List)
+
+    editor --> (Disable)
+    editor --> (Enable)
+    editor --> (Delete)
+    editor --> (Edit)
+}
+
+@enduml

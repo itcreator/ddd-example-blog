@@ -1,0 +1,38 @@
+@startuml
+
+top to bottom direction
+
+Guest --|> User
+AuthorizedUser --|> User
+Author --|> AuthorizedUser
+Moderator --|> AuthorizedUser
+Reader --|> AuthorizedUser
+
+
+rectangle "Comment for all" {
+    left to right direction
+    User -> (Read)
+    AuthorizedUser --> (Comment)
+
+    Author --> (Create)
+
+    Author --> (Disable)
+    Author --> (Enable)
+    Author --> (Delete)
+    Author --> (Edit)
+    (Moderate) .|> (Edit)
+    Moderator --> (Moderate)
+
+    Moderator --> (Disable)
+    Moderator --> (Enable)
+    Moderator --> (Delete)
+
+
+}
+
+'User --> (Use the application) : A small label
+
+':Main Admin: ---> (Use the application) : This is\nyet another\nlabel
+
+@enduml
+
