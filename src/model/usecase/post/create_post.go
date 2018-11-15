@@ -2,6 +2,7 @@ package post
 
 import (
 	"model/entity"
+	modelError "model/error"
 	"model/repository"
 )
 
@@ -21,18 +22,22 @@ func NewCreatePostUc(actorRepository repository.PostCreator, postRepository repo
 	}
 }
 
-func (c *createPostUC) Execute(title, body string, user entity.User) error {
+func (uc *createPostUC) Execute(title, body string, user entity.User) error {
 	//load actor by user
-	actor, err := c.actorRepository.FindByUser(user)
+	actor, err := uc.actorRepository.FindByUser(user)
 	if err != nil {
+		//some infrastructure error
 		return err
+	}
+
+	if actor == nil {
+		return modelError.NewAccessDeniedError("create post", user)
 	}
 
 	//creator.CreatePost
 	post := actor.CreatePost(title, body)
-	_ = post
-	//savePost
-	//return error or nil
 
-	return nil
+	err = uc.postRepository.Save(post)
+
+	return err
 }
