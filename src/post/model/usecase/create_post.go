@@ -1,13 +1,13 @@
-package post
+package usecase
 
 import (
-	"model/entity"
-	modelError "model/error"
-	"model/repository"
+	modelError "post/model/error"
+	"post/model/repository"
+	userEntity "user/model/entity"
 )
 
 type CreatePostUC interface {
-	Execute(title, body string, user entity.User) error
+	Execute(title, body string, user userEntity.User) error
 }
 
 type createPostUC struct {
@@ -22,7 +22,7 @@ func NewCreatePostUc(actorRepository repository.PostCreator, postRepository repo
 	}
 }
 
-func (uc *createPostUC) Execute(title, body string, user entity.User) error {
+func (uc *createPostUC) Execute(title, body string, user userEntity.User) error {
 	//load actor by user
 	actor, err := uc.actorRepository.FindByUser(user)
 	if err != nil {

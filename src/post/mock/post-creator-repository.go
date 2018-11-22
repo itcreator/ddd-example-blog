@@ -2,9 +2,9 @@ package mock
 
 import (
 	"github.com/google/uuid"
-	"model/actor"
-	"model/entity"
-	"model/repository"
+	"post/model/actor"
+	"post/model/repository"
+	userEntity "user/model/entity"
 )
 
 type postCreatorRepository struct {
@@ -21,7 +21,7 @@ func (r *postCreatorRepository) Save(postCreator actor.PostCreator) error {
 	return nil
 }
 
-func (r *postCreatorRepository) FindByUser(user entity.User) (actor.PostCreator, error) {
+func (r *postCreatorRepository) FindByUser(user userEntity.User) (actor.PostCreator, error) {
 	return r.storage[user.GetUUID()], nil
 }
 

@@ -2,15 +2,15 @@ package error
 
 import (
 	"fmt"
-	"model/entity"
+	userEntity "user/model/entity"
 )
 
 type accessDeniedError struct {
 	actorName string
-	user      entity.User
+	user      userEntity.User
 }
 
-func NewAccessDeniedError(actorName string, user entity.User) error {
+func NewAccessDeniedError(actorName string, user userEntity.User) error {
 	return &accessDeniedError{actorName, user}
 }
 

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/google/uuid"
-	"model/entity"
+	"user/model/entity"
 )
 
 type User interface {

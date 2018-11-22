@@ -2,8 +2,8 @@ package mock
 
 import (
 	"github.com/google/uuid"
-	"model/entity"
-	"model/repository"
+	"post/model/entity"
+	"post/model/repository"
 )
 
 type postRepository struct {

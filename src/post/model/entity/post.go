@@ -1,6 +1,9 @@
 package entity
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"user/model/entity"
+)
 
 type Post interface {
 	GetUUID() uuid.UUID
@@ -10,11 +13,11 @@ type Post interface {
 
 type post struct {
 	uuid        uuid.UUID
-	author      User
+	author      entity.User
 	title, body string
 }
 
-func NewPost(author User, title, body string) Post {
+func NewPost(author entity.User, title, body string) Post {
 	return &post{
 		uuid:   uuid.New(),
 		author: author,

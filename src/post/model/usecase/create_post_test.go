@@ -1,14 +1,14 @@
-package post
+package usecase
 
 import (
 	"fmt"
 	"github.com/stretchr/testify/suite"
-	"mock"
-	"model/actor"
-	"model/entity"
-	error2 "model/error"
-	"model/repository"
+	"post/mock"
+	"post/model/actor"
+	error2 "post/model/error"
+	"post/model/repository"
 	"testing"
+	userEntity "user/model/entity"
 )
 
 type createPostSuite struct {
@@ -20,7 +20,7 @@ func (s *createPostSuite) TestExecute() {
 	userRepository := mock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
-	user := entity.NewUser("test user")
+	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 
@@ -39,7 +39,7 @@ func (s *createPostSuite) TestExecuteWithOutPermissions() {
 	userRepository := mock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
-	user := entity.NewUser("test user")
+	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 
@@ -54,7 +54,7 @@ func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
 	userRepository := mock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
-	user := entity.NewUser("test user")
+	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 
@@ -70,7 +70,7 @@ func TestCreatePostHandlerSuite(t *testing.T) {
 
 type mockInfrastructureError struct {
 	actorName string
-	user      entity.User
+	user      userEntity.User
 }
 
 func NewMockInfrastructureError() error {
@@ -92,7 +92,7 @@ func (r *mockBrokenRepository) Save(postCreator actor.PostCreator) error {
 	return NewMockInfrastructureError()
 }
 
-func (r *mockBrokenRepository) FindByUser(user entity.User) (actor.PostCreator, error) {
+func (r *mockBrokenRepository) FindByUser(user userEntity.User) (actor.PostCreator, error) {
 	return nil, NewMockInfrastructureError()
 }
 

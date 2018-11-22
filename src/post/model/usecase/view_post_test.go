@@ -1,10 +1,11 @@
-package post
+package usecase
 
 import (
 	"github.com/stretchr/testify/suite"
-	"mock"
-	"model/entity"
+	"post/mock"
+	"post/model/entity"
 	"testing"
+	userEntity "user/model/entity"
 )
 
 type viewPostSuite struct {
@@ -16,7 +17,7 @@ func (s *viewPostSuite) TestExecute() {
 	userRepository := mock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
-	user := entity.NewUser("test user")
+	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 

@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"model/actor"
-	"model/entity"
+	"post/model/actor"
+	"post/model/entity"
+	userEntity "user/model/entity"
 )
 
 type PostEditor interface {
-	LoadForPost(user entity.User, post entity.Post) (actor.PostViewer, error)
+	LoadForPost(user userEntity.User, post entity.Post) (actor.PostEditor, error)
 	//FindByUser(user entity.User) (actor.PostEditor, error)
 	//Save(creator actor.PostEditor) error
 }

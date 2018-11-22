@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/google/uuid"
-	"model/entity"
+	"post/model/entity"
 )
 
 type Post interface {

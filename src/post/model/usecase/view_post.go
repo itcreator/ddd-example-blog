@@ -1,13 +1,14 @@
-package post
+package usecase
 
 import (
-	"model/entity"
-	modelError "model/error"
-	"model/repository"
+	"post/model/entity"
+	modelError "post/model/error"
+	"post/model/repository"
+	userEntity "user/model/entity"
 )
 
 type ViewPostUC interface {
-	Execute(post entity.Post, user entity.User) (entity.Post, error)
+	Execute(post entity.Post, user userEntity.User) (entity.Post, error)
 }
 
 type viewPostUC struct {
@@ -22,7 +23,7 @@ func NewViewPostUc(actorRepository repository.PostViewer, postRepository reposit
 	}
 }
 
-func (uc *viewPostUC) Execute(post entity.Post, user entity.User) (entity.Post, error) {
+func (uc *viewPostUC) Execute(post entity.Post, user userEntity.User) (entity.Post, error) {
 	//load actor by user
 	actor, err := uc.actorRepository.LoadForPost(user, post)
 	if err != nil {

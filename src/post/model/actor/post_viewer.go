@@ -1,18 +1,20 @@
 package actor
 
-import "model/entity"
+import (
+	userEntity "user/model/entity"
+)
 
 type PostViewer interface {
 	//TODO: is this method needed?
 	//ViewPost(title, body string) entity.Post
-	GetUser() entity.User
+	GetUser() userEntity.User
 }
 
 type postViewer struct {
-	user entity.User
+	user userEntity.User
 }
 
-func NewPostViewer(user entity.User) PostViewer {
+func NewPostViewer(user userEntity.User) PostViewer {
 	return &postViewer{user}
 }
 
@@ -20,6 +22,6 @@ func NewPostViewer(user entity.User) PostViewer {
 //	return entity.NewPost(pc.user, title, body)
 //}
 
-func (pc *postViewer) GetUser() entity.User {
+func (pc *postViewer) GetUser() userEntity.User {
 	return pc.user
 }

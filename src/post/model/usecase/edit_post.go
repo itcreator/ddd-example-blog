@@ -1,13 +1,14 @@
-package post
+package usecase
 
 import (
-	"model/entity"
-	modelError "model/error"
-	"model/repository"
+	"post/model/entity"
+	modelError "post/model/error"
+	"post/model/repository"
+	userEntity "user/model/entity"
 )
 
 type EditPostUC interface {
-	Execute(post entity.Post, user entity.User) (entity.Post, error)
+	Execute(post entity.Post, user userEntity.User) (entity.Post, error)
 }
 
 type editPostUC struct {
@@ -22,7 +23,7 @@ func NewEditPostUc(actorRepository repository.PostEditor, postRepository reposit
 	}
 }
 
-func (uc *editPostUC) Execute(post entity.Post, user entity.User) (entity.Post, error) {
+func (uc *editPostUC) Execute(post entity.Post, user userEntity.User) (entity.Post, error) {
 	//load actor by user
 	actor, err := uc.actorRepository.LoadForPost(user, post)
 	if err != nil {
