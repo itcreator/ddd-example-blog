@@ -9,6 +9,8 @@ type Post interface {
 	GetUUID() uuid.UUID
 	GetTitle() string
 	GetBody() string
+	GetAuthor() entity.User
+	Update(title, body string)
 }
 
 type post struct {
@@ -26,14 +28,23 @@ func NewPost(author entity.User, title, body string) Post {
 	}
 }
 
-func (u *post) GetUUID() uuid.UUID {
-	return u.uuid
+func (p *post) GetUUID() uuid.UUID {
+	return p.uuid
 }
 
-func (u *post) GetBody() string {
-	return u.body
+func (p *post) GetBody() string {
+	return p.body
 }
 
-func (u *post) GetTitle() string {
-	return u.title
+func (p *post) GetTitle() string {
+	return p.title
+}
+
+func (p *post) GetAuthor() entity.User {
+	return p.author
+}
+
+func (p *post) Update(title, body string) {
+	p.title = title
+	p.body = body
 }

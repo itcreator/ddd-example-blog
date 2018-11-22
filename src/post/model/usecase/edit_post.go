@@ -4,38 +4,35 @@ import (
 	"post/model/entity"
 	modelError "post/model/error"
 	"post/model/repository"
+	"post/model/specification/actor"
 	userEntity "user/model/entity"
 )
 
 type EditPostUC interface {
-	Execute(post entity.Post, user userEntity.User) (entity.Post, error)
+	Execute(title, body string, post entity.Post, user userEntity.User) error
 }
 
 type editPostUC struct {
-	actorRepository repository.PostEditor
-	postRepository  repository.Post
+	postRepository repository.Post
 }
 
-func NewEditPostUc(actorRepository repository.PostEditor, postRepository repository.Post) EditPostUC {
+func NewEditPostUc(postRepository repository.Post) EditPostUC {
 	return &editPostUC{
-		actorRepository: actorRepository,
-		postRepository:  postRepository,
+		postRepository: postRepository,
 	}
 }
 
-func (uc *editPostUC) Execute(post entity.Post, user userEntity.User) (entity.Post, error) {
-	//load actor by user
-	actor, err := uc.actorRepository.LoadForPost(user, post)
-	if err != nil {
-		//some infrastructure error
-		return nil, err
+func (uc *editPostUC) Execute(title, body string, post entity.Post, user userEntity.User) error {
+	spec := actor.NewEditorSpecification(post)
+
+	//if user can't be actor for this UC
+	if !spec.IsSatisfiedBy(user) {
+		return modelError.NewAccessDeniedError("edit post", user)
 	}
 
-	if actor == nil {
-		return nil, modelError.NewAccessDeniedError("edit post", user)
-	}
+	post.Update(title, body)
 
-	err = uc.postRepository.Save(post)
+	err := uc.postRepository.Save(post)
 
-	return post, err
+	return err
 }
