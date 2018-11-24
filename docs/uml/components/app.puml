@@ -1,0 +1,15 @@
+@startuml
+
+component User
+
+package "Blog" {
+    component Post
+    component Comment
+
+
+    Post --> User
+    Comment -> Post
+    Comment -> User
+}
+
+@enduml
