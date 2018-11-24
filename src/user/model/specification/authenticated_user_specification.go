@@ -8,7 +8,7 @@ type adminSpecification struct {
 
 func (s *adminSpecification) IsSatisfiedBy(user entity.User) bool {
 	//todo: request auth service for status
-	return true
+	return false
 }
 
 func NewAdminSpecification() UserSpecification {
