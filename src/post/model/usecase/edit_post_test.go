@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"post/mock"
 	"post/model/entity"
+	error2 "post/model/error"
 	"testing"
 	userEntity "user/model/entity"
 )
@@ -29,6 +30,26 @@ func (s *editPostSuite) TestExecute() {
 
 	s.Equal("test title2", post.GetTitle())
 	s.Equal("test body2", post.GetBody())
+}
+
+func (s *editPostSuite) TestExecuteWithOutPermissions() {
+	userRepository := mock.NewUserRepository()
+	postRepository := mock.NewPostRepository()
+
+	author := userEntity.NewUser("test author")
+	err := userRepository.Save(author)
+	s.NoError(err)
+
+	post := entity.NewPost(author, "test", "test")
+	err = postRepository.Save(post)
+	s.NoError(err)
+
+	notAuthor := userEntity.NewUser("test not author")
+
+	uc := NewEditPostUc(postRepository)
+
+	err = uc.Execute("new title", "new body", post, notAuthor)
+	s.EqualError(err, error2.NewAccessDeniedError("edit post", notAuthor).Error())
 }
 
 func TestEditPostHandlerSuite(t *testing.T) {

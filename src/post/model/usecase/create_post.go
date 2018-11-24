@@ -1,8 +1,10 @@
 package usecase
 
 import (
+	"post/model/entity"
 	modelError "post/model/error"
 	"post/model/repository"
+	"post/model/specification/actor"
 	userEntity "user/model/entity"
 )
 
@@ -11,33 +13,27 @@ type CreatePostUC interface {
 }
 
 type createPostUC struct {
-	actorRepository repository.PostCreator
-	postRepository  repository.Post
+	postRepository repository.Post
 }
 
-func NewCreatePostUc(actorRepository repository.PostCreator, postRepository repository.Post) CreatePostUC {
+func NewCreatePostUc(postRepository repository.Post) CreatePostUC {
 	return &createPostUC{
-		actorRepository: actorRepository,
-		postRepository:  postRepository,
+		postRepository: postRepository,
 	}
 }
 
 func (uc *createPostUC) Execute(title, body string, user userEntity.User) error {
-	//load actor by user
-	actor, err := uc.actorRepository.FindByUser(user)
-	if err != nil {
-		//some infrastructure error
-		return err
-	}
+	spec := actor.NewCreatorSpecification()
 
-	if actor == nil {
+	//if user can't be actor for this UC
+	if !spec.IsSatisfiedBy(user) {
 		return modelError.NewAccessDeniedError("create post", user)
 	}
 
 	//creator.CreatePost
-	post := actor.CreatePost(title, body)
+	post := entity.NewPost(user, title, body)
 
-	err = uc.postRepository.Save(post)
+	err := uc.postRepository.Save(post)
 
 	return err
 }

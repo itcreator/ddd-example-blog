@@ -8,7 +8,7 @@ import (
 
 func NewEditorSpecification(post entity.Post) userSpecification.UserSpecification {
 	return userSpecification.NewOrSpecification(
-		specification.NewdAuthorSpecification(post),
+		specification.NewAuthorSpecification(post),
 		userSpecification.NewAdminSpecification(),
 	)
 }

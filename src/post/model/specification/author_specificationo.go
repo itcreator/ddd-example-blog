@@ -15,6 +15,6 @@ func (s *authorSpecification) IsSatisfiedBy(user userEntity.User) bool {
 	return user.GetUUID() == s.post.GetAuthor().GetUUID()
 }
 
-func NewdAuthorSpecification(post entity.Post) specification.UserSpecification {
+func NewAuthorSpecification(post entity.Post) specification.UserSpecification {
 	return &authorSpecification{post}
 }

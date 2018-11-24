@@ -4,6 +4,7 @@ import (
 	"post/model/entity"
 	modelError "post/model/error"
 	"post/model/repository"
+	"post/model/specification/actor"
 	userEntity "user/model/entity"
 )
 
@@ -24,18 +25,14 @@ func NewViewPostUc(actorRepository repository.PostViewer, postRepository reposit
 }
 
 func (uc *viewPostUC) Execute(post entity.Post, user userEntity.User) (entity.Post, error) {
-	//load actor by user
-	actor, err := uc.actorRepository.LoadForPost(user, post)
-	if err != nil {
-		//some infrastructure error
-		return nil, err
-	}
+	spec := actor.NewViewerSpecification()
 
-	if actor == nil {
+	//if user can't be actor for this UC
+	if !spec.IsSatisfiedBy(user) {
 		return nil, modelError.NewAccessDeniedError("view post", user)
 	}
 
-	err = uc.postRepository.Save(post)
+	//there you can run some addition activity. E.g. logging, decorating
 
-	return post, err
+	return post, nil
 }

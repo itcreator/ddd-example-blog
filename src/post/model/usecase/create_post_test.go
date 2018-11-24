@@ -2,10 +2,10 @@ package usecase
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"post/mock"
-	"post/model/actor"
-	error2 "post/model/error"
+	"post/model/entity"
 	"post/model/repository"
 	"testing"
 	userEntity "user/model/entity"
@@ -16,7 +16,6 @@ type createPostSuite struct {
 }
 
 func (s *createPostSuite) TestExecute() {
-	actorRepository := mock.NewPostCreatorRepository()
 	userRepository := mock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
@@ -24,41 +23,21 @@ func (s *createPostSuite) TestExecute() {
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	postCreator := actor.NewPostCreator(user)
-	err = actorRepository.Save(postCreator)
-	s.NoError(err)
-
-	uc := NewCreatePostUc(actorRepository, postRepository)
+	uc := NewCreatePostUc(postRepository)
 
 	err = uc.Execute("test title", "testBody", user)
 	s.NoError(err)
-}
-
-func (s *createPostSuite) TestExecuteWithOutPermissions() {
-	actorRepository := mock.NewPostCreatorRepository()
-	userRepository := mock.NewUserRepository()
-	postRepository := mock.NewPostRepository()
-
-	user := userEntity.NewUser("test user")
-	err := userRepository.Save(user)
-	s.NoError(err)
-
-	uc := NewCreatePostUc(actorRepository, postRepository)
-
-	err = uc.Execute("test title", "testBody", user)
-	s.EqualError(err, error2.NewAccessDeniedError("create post", user).Error())
 }
 
 func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
-	brokenActorRepository := NewMockBrokenRepository()
 	userRepository := mock.NewUserRepository()
-	postRepository := mock.NewPostRepository()
+	postRepository := NewMockBrokenPostRepository()
 
 	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	uc := NewCreatePostUc(brokenActorRepository, postRepository)
+	uc := NewCreatePostUc(postRepository)
 
 	err = uc.Execute("test title", "testBody", user)
 	s.EqualError(err, NewMockInfrastructureError().Error())
@@ -81,21 +60,17 @@ func (e *mockInfrastructureError) Error() string {
 	return fmt.Sprintf("test error")
 }
 
-type mockBrokenRepository struct {
+type mockBrokenPostRepository struct {
 }
 
-func NewMockBrokenRepository() repository.PostCreator {
-	return &mockBrokenRepository{}
+func NewMockBrokenPostRepository() repository.Post {
+	return &mockBrokenPostRepository{}
 }
 
-func (r *mockBrokenRepository) Save(postCreator actor.PostCreator) error {
+func (r *mockBrokenPostRepository) Save(post entity.Post) error {
 	return NewMockInfrastructureError()
 }
 
-func (r *mockBrokenRepository) FindByUser(user userEntity.User) (actor.PostCreator, error) {
+func (r *mockBrokenPostRepository) Find(uuid uuid.UUID) (entity.Post, error) {
 	return nil, NewMockInfrastructureError()
-}
-
-func (r *mockBrokenRepository) Delete(postCreator actor.PostCreator) error {
-	return NewMockInfrastructureError()
 }
