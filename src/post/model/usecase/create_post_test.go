@@ -8,6 +8,7 @@ import (
 	"post/model/entity"
 	"post/model/repository"
 	"testing"
+	userMock "user/mock"
 	userEntity "user/model/entity"
 )
 
@@ -16,7 +17,7 @@ type createPostSuite struct {
 }
 
 func (s *createPostSuite) TestExecute() {
-	userRepository := mock.NewUserRepository()
+	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
 	user := userEntity.NewUser("test user")
@@ -30,7 +31,7 @@ func (s *createPostSuite) TestExecute() {
 }
 
 func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
-	userRepository := mock.NewUserRepository()
+	userRepository := userMock.NewUserRepository()
 	postRepository := NewMockBrokenPostRepository()
 
 	user := userEntity.NewUser("test user")

@@ -6,6 +6,7 @@ import (
 	"post/model/entity"
 	error2 "post/model/error"
 	"testing"
+	userMock "user/mock"
 	userEntity "user/model/entity"
 )
 
@@ -14,7 +15,7 @@ type editPostSuite struct {
 }
 
 func (s *editPostSuite) TestExecute() {
-	userRepository := mock.NewUserRepository()
+	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
 	user := userEntity.NewUser("test user")
@@ -33,7 +34,7 @@ func (s *editPostSuite) TestExecute() {
 }
 
 func (s *editPostSuite) TestExecuteWithOutPermissions() {
-	userRepository := mock.NewUserRepository()
+	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
 	author := userEntity.NewUser("test author")

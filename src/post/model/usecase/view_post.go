@@ -13,14 +13,12 @@ type ViewPostUC interface {
 }
 
 type viewPostUC struct {
-	actorRepository repository.PostViewer
-	postRepository  repository.Post
+	postRepository repository.Post
 }
 
-func NewViewPostUc(actorRepository repository.PostViewer, postRepository repository.Post) ViewPostUC {
+func NewViewPostUc(postRepository repository.Post) ViewPostUC {
 	return &viewPostUC{
-		actorRepository: actorRepository,
-		postRepository:  postRepository,
+		postRepository: postRepository,
 	}
 }
 

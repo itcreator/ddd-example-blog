@@ -5,6 +5,7 @@ import (
 	"post/mock"
 	"post/model/entity"
 	"testing"
+	userMock "user/mock"
 	userEntity "user/model/entity"
 )
 
@@ -13,15 +14,14 @@ type viewPostSuite struct {
 }
 
 func (s *viewPostSuite) TestExecute() {
-	actorRepository := mock.NewPostViewerRepository()
-	userRepository := mock.NewUserRepository()
+	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
 	user := userEntity.NewUser("test user")
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	uc := NewViewPostUc(actorRepository, postRepository)
+	uc := NewViewPostUc(postRepository)
 
 	post, err := uc.Execute(entity.NewPost(user, "test", "test"), user)
 	s.NoError(err)
