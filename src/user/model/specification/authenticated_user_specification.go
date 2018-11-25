@@ -1,16 +1,24 @@
 package specification
 
-import "user/model/entity"
+import (
+	"user/model"
+	"user/model/entity"
+)
 
-type adminSpecification struct {
-	//todo: add authentication service dependency
+type authenticatedUserSpecification struct {
+	authenticator model.Authenticator
 }
 
-func (s *adminSpecification) IsSatisfiedBy(user entity.User) bool {
-	//todo: request auth service for status
-	return false
+func (s *authenticatedUserSpecification) IsSatisfiedBy(user entity.User) bool {
+	ok, err := s.authenticator.IsAuthenticated(user)
+
+	if err == nil && ok {
+		return true
+	} else {
+		return false
+	}
 }
 
-func NewAdminSpecification() UserSpecification {
-	return &adminSpecification{}
+func NewAuthenticatedUserSpecification(auth model.Authenticator) UserSpecification {
+	return &authenticatedUserSpecification{auth}
 }

@@ -13,17 +13,19 @@ type CreatePostUC interface {
 }
 
 type createPostUC struct {
-	postRepository repository.Post
+	postRepository              repository.Post
+	creatorSpecificationFactory actor.CreatorSpecificationFactory
 }
 
-func NewCreatePostUc(postRepository repository.Post) CreatePostUC {
+func NewCreatePostUc(postRepository repository.Post, factory actor.CreatorSpecificationFactory) CreatePostUC {
 	return &createPostUC{
-		postRepository: postRepository,
+		postRepository:              postRepository,
+		creatorSpecificationFactory: factory,
 	}
 }
 
 func (uc *createPostUC) Execute(title, body string, user userEntity.User) error {
-	spec := actor.NewCreatorSpecification()
+	spec := uc.creatorSpecificationFactory.Create()
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {

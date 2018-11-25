@@ -6,7 +6,9 @@ import (
 	"github.com/stretchr/testify/suite"
 	"post/mock"
 	"post/model/entity"
+	error2 "post/model/error"
 	"post/model/repository"
+	"post/model/specification/actor"
 	"testing"
 	userMock "user/mock"
 	userEntity "user/model/entity"
@@ -24,10 +26,29 @@ func (s *createPostSuite) TestExecute() {
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	uc := NewCreatePostUc(postRepository)
+	authenticator := userMock.NewAuthenticator()
+	_ = authenticator.Authenticate(user)
+	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
+	uc := NewCreatePostUc(postRepository, creatorFactory)
 
 	err = uc.Execute("test title", "testBody", user)
 	s.NoError(err)
+}
+
+func (s *createPostSuite) TestExecuteWithOutPermissions() {
+	userRepository := userMock.NewUserRepository()
+	postRepository := mock.NewPostRepository()
+
+	user := userEntity.NewUser("test user")
+	err := userRepository.Save(user)
+	s.NoError(err)
+
+	authenticator := userMock.NewAuthenticator()
+	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
+	uc := NewCreatePostUc(postRepository, creatorFactory)
+
+	err = uc.Execute("test title", "testBody", user)
+	s.EqualError(err, error2.NewAccessDeniedError("create post", user).Error())
 }
 
 func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
@@ -38,7 +59,10 @@ func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	uc := NewCreatePostUc(postRepository)
+	authenticator := userMock.NewAuthenticator()
+	_ = authenticator.Authenticate(user)
+	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
+	uc := NewCreatePostUc(postRepository, creatorFactory)
 
 	err = uc.Execute("test title", "testBody", user)
 	s.EqualError(err, NewMockInfrastructureError().Error())

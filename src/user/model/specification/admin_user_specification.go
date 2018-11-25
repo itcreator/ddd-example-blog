@@ -2,15 +2,15 @@ package specification
 
 import "user/model/entity"
 
-type authenticatedUserSpecification struct {
+type adminSpecification struct {
 	//todo: add authentication service dependency
 }
 
-func (s *authenticatedUserSpecification) IsSatisfiedBy(user entity.User) bool {
+func (s *adminSpecification) IsSatisfiedBy(user entity.User) bool {
 	//todo: request auth service for status
-	return true
+	return false
 }
 
-func NewAuthenticatedUserSpecification() UserSpecification {
-	return &authenticatedUserSpecification{}
+func NewAdminSpecification() UserSpecification {
+	return &adminSpecification{}
 }
