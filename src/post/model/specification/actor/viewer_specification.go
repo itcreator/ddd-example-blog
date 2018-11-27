@@ -4,6 +4,18 @@ import (
 	"user/model/specification"
 )
 
-func NewViewerSpecification() specification.UserSpecification {
+type ViewerSpecificationFactory interface {
+	Create() specification.UserSpecification
+}
+
+type viewerSpecificationFactory struct {
+}
+
+//everybody can view post
+func NewViewerSpecificationFactory() ViewerSpecificationFactory {
+	return &viewerSpecificationFactory{}
+}
+
+func (f *viewerSpecificationFactory) Create() specification.UserSpecification {
 	return specification.NewEverybodySpecification()
 }

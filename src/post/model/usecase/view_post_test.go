@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"post/mock"
 	"post/model/entity"
+	"post/model/specification/actor"
 	"testing"
 	userMock "user/mock"
 	userEntity "user/model/entity"
@@ -21,7 +22,7 @@ func (s *viewPostSuite) TestExecute() {
 	err := userRepository.Save(user)
 	s.NoError(err)
 
-	uc := NewViewPostUc(postRepository)
+	uc := NewViewPostUc(postRepository, actor.NewViewerSpecificationFactory())
 
 	post, err := uc.Execute(entity.NewPost(user, "test", "test"), user)
 	s.NoError(err)
