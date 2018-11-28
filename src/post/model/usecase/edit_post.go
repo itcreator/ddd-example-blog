@@ -13,17 +13,19 @@ type EditPostUC interface {
 }
 
 type editPostUC struct {
-	postRepository repository.Post
+	postRepository             repository.Post
+	editorSpecificationFactory actor.EditorSpecificationFactory
 }
 
-func NewEditPostUc(postRepository repository.Post) EditPostUC {
+func NewEditPostUc(postRepository repository.Post, factory actor.EditorSpecificationFactory) EditPostUC {
 	return &editPostUC{
-		postRepository: postRepository,
+		postRepository:             postRepository,
+		editorSpecificationFactory: factory,
 	}
 }
 
 func (uc *editPostUC) Execute(title, body string, post entity.Post, user userEntity.User) error {
-	spec := actor.NewEditorSpecification(post)
+	spec := uc.editorSpecificationFactory.Create(post)
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {

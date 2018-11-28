@@ -5,6 +5,7 @@ import (
 	"post/mock"
 	"post/model/entity"
 	error2 "post/model/error"
+	"post/model/specification/actor"
 	"testing"
 	userMock "user/mock"
 	userEntity "user/model/entity"
@@ -24,7 +25,9 @@ func (s *editPostSuite) TestExecute() {
 
 	post := entity.NewPost(user, "test title", "test body")
 
-	uc := NewEditPostUc(postRepository)
+	pm := userMock.NewAdminPermissionManager()
+	specFactory := actor.NewEditorSpecificationFactory(pm)
+	uc := NewEditPostUc(postRepository, specFactory)
 
 	err = uc.Execute("test title2", "test body2", post, user)
 	s.NoError(err)
@@ -47,7 +50,9 @@ func (s *editPostSuite) TestExecuteWithOutPermissions() {
 
 	notAuthor := userEntity.NewUser("test not author")
 
-	uc := NewEditPostUc(postRepository)
+	pm := userMock.NewAdminPermissionManager()
+	specFactory := actor.NewEditorSpecificationFactory(pm)
+	uc := NewEditPostUc(postRepository, specFactory)
 
 	err = uc.Execute("new title", "new body", post, notAuthor)
 	s.EqualError(err, error2.NewAccessDeniedError("edit post", notAuthor).Error())
