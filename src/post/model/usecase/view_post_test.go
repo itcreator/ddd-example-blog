@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"post/mock"
 	"post/model/entity"
@@ -24,9 +25,13 @@ func (s *viewPostSuite) TestExecute() {
 
 	uc := NewViewPostUc(postRepository, actor.NewViewerSpecificationFactory())
 
-	post, err := uc.Execute(entity.NewPost(user, "test", "test"), user)
+	id := uuid.New()
+	post, err := uc.Execute(entity.NewPost(id, user, "test title", "test body"), user)
 	s.NoError(err)
 	s.NotNil(post)
+	s.Equal(id, post.GetUUID())
+	s.Equal("test title", post.GetTitle())
+	s.Equal("test body", post.GetBody())
 }
 
 func TestViewPostHandlerSuite(t *testing.T) {

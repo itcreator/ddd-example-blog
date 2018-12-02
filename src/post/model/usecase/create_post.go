@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/google/uuid"
 	"post/model/entity"
 	modelError "post/model/error"
 	"post/model/repository"
@@ -9,7 +10,7 @@ import (
 )
 
 type CreatePostUC interface {
-	Execute(title, body string, user userEntity.User) error
+	Execute(uuid uuid.UUID, title, body string, user userEntity.User) error
 }
 
 type createPostUC struct {
@@ -24,7 +25,7 @@ func NewCreatePostUc(postRepository repository.Post, factory actor.CreatorSpecif
 	}
 }
 
-func (uc *createPostUC) Execute(title, body string, user userEntity.User) error {
+func (uc *createPostUC) Execute(uuid uuid.UUID, title, body string, user userEntity.User) error {
 	spec := uc.creatorSpecificationFactory.Create()
 
 	//if user can't be actor for this UC
@@ -33,7 +34,7 @@ func (uc *createPostUC) Execute(title, body string, user userEntity.User) error 
 	}
 
 	//creator.CreatePost
-	post := entity.NewPost(user, title, body)
+	post := entity.NewPost(uuid, user, title, body)
 
 	err := uc.postRepository.Save(post)
 

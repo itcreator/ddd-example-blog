@@ -13,19 +13,19 @@ type ViewPostUC interface {
 }
 
 type viewPostUC struct {
-	postRepository              repository.Post
-	creatorSpecificationFactory actor.ViewerSpecificationFactory
+	postRepository             repository.Post
+	viewerSpecificationFactory actor.ViewerSpecificationFactory
 }
 
 func NewViewPostUc(postRepository repository.Post, factory actor.ViewerSpecificationFactory) ViewPostUC {
 	return &viewPostUC{
-		postRepository:              postRepository,
-		creatorSpecificationFactory: factory,
+		postRepository:             postRepository,
+		viewerSpecificationFactory: factory,
 	}
 }
 
 func (uc *viewPostUC) Execute(post entity.Post, user userEntity.User) (entity.Post, error) {
-	spec := uc.creatorSpecificationFactory.Create()
+	spec := uc.viewerSpecificationFactory.Create()
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {

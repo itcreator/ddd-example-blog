@@ -12,11 +12,11 @@ import (
 	userEntity "user/model/entity"
 )
 
-type editPostSuite struct {
+type disablePostSuite struct {
 	suite.Suite
 }
 
-func (s *editPostSuite) TestExecute() {
+func (s *disablePostSuite) TestExecute() {
 	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
@@ -24,21 +24,24 @@ func (s *editPostSuite) TestExecute() {
 	err := userRepository.Save(user)
 	s.NoError(err)
 
+	pm := userMock.NewAdminPermissionManager()
+	uc := NewDisablePostUc(postRepository, actor.NewEditorSpecificationFactory(pm))
+
 	id := uuid.New()
 	post := entity.NewPost(id, user, "test title", "test body")
-
-	pm := userMock.NewAdminPermissionManager()
-	specFactory := actor.NewEditorSpecificationFactory(pm)
-	uc := NewEditPostUc(postRepository, specFactory)
-
-	err = uc.Execute("test title2", "test body2", post, user)
+	err = postRepository.Save(post)
 	s.NoError(err)
 
-	s.Equal("test title2", post.GetTitle())
-	s.Equal("test body2", post.GetBody())
+	err = uc.Execute(post, user)
+	s.NoError(err)
+
+	storedPost, err := postRepository.Find(id)
+	s.NoError(err)
+	s.NotNil(storedPost)
+	s.False(storedPost.IsEnabled())
 }
 
-func (s *editPostSuite) TestExecuteWithOutPermissions() {
+func (s *disablePostSuite) TestExecuteWithOutPermissions() {
 	userRepository := userMock.NewUserRepository()
 	postRepository := mock.NewPostRepository()
 
@@ -55,12 +58,12 @@ func (s *editPostSuite) TestExecuteWithOutPermissions() {
 
 	pm := userMock.NewAdminPermissionManager()
 	specFactory := actor.NewEditorSpecificationFactory(pm)
-	uc := NewEditPostUc(postRepository, specFactory)
+	uc := NewDisablePostUc(postRepository, specFactory)
 
-	err = uc.Execute("new title", "new body", post, notAuthor)
+	err = uc.Execute(post, notAuthor)
 	s.EqualError(err, error2.NewAccessDeniedError("edit post", notAuthor).Error())
 }
 
-func TestEditPostHandlerSuite(t *testing.T) {
-	suite.Run(t, new(editPostSuite))
+func TestDisablePostHandlerSuite(t *testing.T) {
+	suite.Run(t, new(disablePostSuite))
 }

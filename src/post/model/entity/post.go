@@ -11,20 +11,25 @@ type Post interface {
 	GetBody() string
 	GetAuthor() entity.User
 	Update(title, body string)
+	IsEnabled() bool
+	Enable()
+	Disable()
 }
 
 type post struct {
 	uuid        uuid.UUID
 	author      entity.User
 	title, body string
+	enabled     bool
 }
 
-func NewPost(author entity.User, title, body string) Post {
+func NewPost(id uuid.UUID, author entity.User, title, body string) Post {
 	return &post{
-		uuid:   uuid.New(),
-		author: author,
-		title:  title,
-		body:   body,
+		uuid:    id,
+		author:  author,
+		title:   title,
+		body:    body,
+		enabled: true,
 	}
 }
 
@@ -47,4 +52,16 @@ func (p *post) GetAuthor() entity.User {
 func (p *post) Update(title, body string) {
 	p.title = title
 	p.body = body
+}
+
+func (p *post) Enable() {
+	p.enabled = true
+}
+
+func (p *post) Disable() {
+	p.enabled = false
+}
+
+func (p *post) IsEnabled() bool {
+	return p.enabled
 }

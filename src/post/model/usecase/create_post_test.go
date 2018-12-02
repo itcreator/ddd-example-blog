@@ -31,8 +31,14 @@ func (s *createPostSuite) TestExecute() {
 	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
 	uc := NewCreatePostUc(postRepository, creatorFactory)
 
-	err = uc.Execute("test title", "testBody", user)
+	id := uuid.New()
+	err = uc.Execute(id, "test title", "test body", user)
 	s.NoError(err)
+
+	post, err := postRepository.Find(id)
+	s.Equal(id, post.GetUUID())
+	s.Equal("test title", post.GetTitle())
+	s.Equal("test body", post.GetBody())
 }
 
 func (s *createPostSuite) TestExecuteWithOutPermissions() {
@@ -47,7 +53,8 @@ func (s *createPostSuite) TestExecuteWithOutPermissions() {
 	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
 	uc := NewCreatePostUc(postRepository, creatorFactory)
 
-	err = uc.Execute("test title", "testBody", user)
+	id := uuid.New()
+	err = uc.Execute(id, "test title", "testBody", user)
 	s.EqualError(err, error2.NewAccessDeniedError("create post", user).Error())
 }
 
@@ -64,7 +71,8 @@ func (s *createPostSuite) TestExecuteHandlesInfrastructureError() {
 	creatorFactory := actor.NewCreatorSpecificationFactory(authenticator)
 	uc := NewCreatePostUc(postRepository, creatorFactory)
 
-	err = uc.Execute("test title", "testBody", user)
+	id := uuid.New()
+	err = uc.Execute(id, "test title", "testBody", user)
 	s.EqualError(err, NewMockInfrastructureError().Error())
 }
 
