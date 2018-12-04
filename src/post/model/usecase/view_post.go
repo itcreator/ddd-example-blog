@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"post/model/entity"
-	modelError "post/model/error"
 	"post/model/repository"
 	"post/model/specification/actor"
 	userEntity "user/model/entity"
@@ -29,7 +28,7 @@ func (uc *viewPostUC) Execute(post entity.Post, user userEntity.User) (entity.Po
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {
-		return nil, modelError.NewAccessDeniedError("view post", user)
+		return nil, uc.viewerSpecificationFactory.CreateAccessDeniedError(user)
 	}
 
 	//there you can run some addition activity. E.g. logging, decorating

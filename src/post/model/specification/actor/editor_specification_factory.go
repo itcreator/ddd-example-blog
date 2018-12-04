@@ -2,13 +2,16 @@ package actor
 
 import (
 	"post/model/entity"
+	modelError "post/model/error"
 	"post/model/specification"
+	userEntity "user/model/entity"
 	"user/model/permission"
 	userSpec "user/model/specification"
 )
 
 type EditorSpecificationFactory interface {
 	Create(post entity.Post) userSpec.UserSpecification
+	CreateAccessDeniedError(user userEntity.User) error
 }
 
 type editorSpecificationFactory struct {
@@ -26,4 +29,8 @@ func (f *editorSpecificationFactory) Create(post entity.Post) userSpec.UserSpeci
 		specification.NewAuthorSpecification(post),
 		userSpec.NewGrantedUserSpecification(f.adminChecker),
 	)
+}
+
+func (f *editorSpecificationFactory) CreateAccessDeniedError(user userEntity.User) error {
+	return modelError.NewAccessDeniedError("edit post", user)
 }

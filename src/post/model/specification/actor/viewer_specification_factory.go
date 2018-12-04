@@ -1,11 +1,14 @@
 package actor
 
 import (
+	modelError "post/model/error"
+	"user/model/entity"
 	"user/model/specification"
 )
 
 type ViewerSpecificationFactory interface {
 	Create() specification.UserSpecification
+	CreateAccessDeniedError(user entity.User) error
 }
 
 type viewerSpecificationFactory struct {
@@ -18,4 +21,8 @@ func NewViewerSpecificationFactory() ViewerSpecificationFactory {
 
 func (f *viewerSpecificationFactory) Create() specification.UserSpecification {
 	return specification.NewEverybodySpecification()
+}
+
+func (f *viewerSpecificationFactory) CreateAccessDeniedError(user entity.User) error {
+	return modelError.NewAccessDeniedError("view post", user)
 }

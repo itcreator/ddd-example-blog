@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"post/model/entity"
-	modelError "post/model/error"
 	"post/model/repository"
 	"post/model/specification/actor"
 	userEntity "user/model/entity"
@@ -29,7 +28,7 @@ func (uc *editPostUC) Execute(title, body string, post entity.Post, user userEnt
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {
-		return modelError.NewAccessDeniedError("edit post", user)
+		return uc.editorSpecificationFactory.CreateAccessDeniedError(user)
 	}
 
 	post.Update(title, body)

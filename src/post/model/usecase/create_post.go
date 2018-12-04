@@ -3,7 +3,6 @@ package usecase
 import (
 	"github.com/google/uuid"
 	"post/model/entity"
-	modelError "post/model/error"
 	"post/model/repository"
 	"post/model/specification/actor"
 	userEntity "user/model/entity"
@@ -30,7 +29,7 @@ func (uc *createPostUC) Execute(uuid uuid.UUID, title, body string, user userEnt
 
 	//if user can't be actor for this UC
 	if !spec.IsSatisfiedBy(user) {
-		return modelError.NewAccessDeniedError("create post", user)
+		return uc.creatorSpecificationFactory.CreateAccessDeniedError(user)
 	}
 
 	//creator.CreatePost
