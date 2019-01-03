@@ -32,3 +32,28 @@ func (r *postRepository) Delete(post entity.Post) error {
 
 	return nil
 }
+
+func (r *postRepository) List(start, limit int) ([]entity.Post, error) {
+	var posts []entity.Post
+	for _, post := range r.storage {
+		if len(posts) >= limit {
+			break
+		}
+		if post.IsEnabled() {
+			posts = append(posts, post)
+		}
+	}
+
+	return posts, nil
+}
+
+func (r *postRepository) GetTotal() (int, error) {
+	count := 0
+	for _, post := range r.storage {
+		if post.IsEnabled() {
+			count++
+		}
+	}
+
+	return count, nil
+}

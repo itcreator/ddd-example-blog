@@ -107,3 +107,11 @@ func (r *mockBrokenPostRepository) Save(post entity.Post) error {
 func (r *mockBrokenPostRepository) Find(uuid uuid.UUID) (entity.Post, error) {
 	return nil, NewMockInfrastructureError()
 }
+
+func (r *mockBrokenPostRepository) List(start, limit int) ([]entity.Post, error) {
+	return nil, nil
+}
+
+func (r *mockBrokenPostRepository) GetTotal() (int, error) {
+	return 0, nil
+}
