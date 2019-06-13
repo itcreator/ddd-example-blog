@@ -36,6 +36,8 @@ func (s *createPostSuite) TestExecute() {
 	s.NoError(err)
 
 	post, err := postRepository.Find(id)
+	s.NoError(err)
+
 	s.Equal(id, post.GetUUID())
 	s.Equal("test title", post.GetTitle())
 	s.Equal("test body", post.GetBody())
