@@ -12,40 +12,53 @@ type Comment interface {
 	GetAuthor() entity.User
 	GetPost() postEntity.Post
 	Update(body string)
+	Delete()
+	IsEnabled() bool
 }
 
 type comment struct {
-	post   postEntity.Post
-	uuid   uuid.UUID
-	author entity.User
-	body   string
+	post    postEntity.Post
+	uuid    uuid.UUID
+	author  entity.User
+	body    string
+	enabled bool
 }
 
 func NewComment(id uuid.UUID, post postEntity.Post, author entity.User, body string) Comment {
 	return &comment{
-		post:   post,
-		uuid:   id,
-		author: author,
-		body:   body,
+		post:    post,
+		uuid:    id,
+		author:  author,
+		body:    body,
+		enabled: true,
 	}
 }
 
-func (p *comment) GetPost() postEntity.Post {
-	return p.post
+func (c *comment) GetPost() postEntity.Post {
+	return c.post
 }
 
-func (p *comment) GetUUID() uuid.UUID {
-	return p.uuid
+func (c *comment) GetUUID() uuid.UUID {
+	return c.uuid
 }
 
-func (p *comment) GetBody() string {
-	return p.body
+func (c *comment) GetBody() string {
+	return c.body
 }
 
-func (p *comment) GetAuthor() entity.User {
-	return p.author
+func (c *comment) GetAuthor() entity.User {
+	return c.author
 }
 
-func (p *comment) Update(body string) {
-	p.body = body
+func (c *comment) Update(body string) {
+	c.body = body
+}
+
+func (c *comment) Delete() {
+	c.body = ""
+	c.enabled = false
+}
+
+func (c *comment) IsEnabled() bool {
+	return c.enabled
 }
