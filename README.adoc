@@ -1,0 +1,37 @@
+= ddd-example-blog
+
+----
+It is example blog created according DDD approach
+----
+
+To view diagrams please install PlantUML plugin for your IDE
+
+
+
+[plantuml]
+----
+@startuml
+
+component User
+
+package "Blog" {
+    component Post
+    component Comment
+
+
+    Post --> User
+    Comment -> Post
+    Comment -> User
+}
+
+@enduml
+----
+
+UseCase diagram:
+
+plantuml::./docs/uml/usecaces/post.puml[format="svg"]
+
+
+.TODO:
+* mock specification factories
+* solve foreign dependencies (replace uuid to BL type)
