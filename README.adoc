@@ -27,10 +27,106 @@ package "Blog" {
 @enduml
 ----
 
-UseCase diagram:
+UseCase diagram as lint to puml:
 
 plantuml::./docs/uml/usecaces/post.puml[format="svg"]
 
+UseCase diagram as lint to puml proxy (image):
+
+image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/feature/ascii-doc-example/docs/uml/usecaces/post.puml[]
+
+image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/8224a1a0cd74896e11ba4c0f15465375b92ff53e/docs/uml/usecaces/comment.puml[]
+
+
+== Hash _<hash_number>_
+
+image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/_<hash_number>_/docs/uml/usecaces/comment.puml[]
+
+
+
+
+
+Code example
+
+[source,go]
+----
+package entity
+
+import (
+	"github.com/google/uuid"
+	"user/model/entity"
+)
+
+type Post interface {
+	GetUUID() uuid.UUID
+	GetTitle() string
+	GetBody() string
+	GetAuthor() entity.User
+	Update(title, body string)
+	IsEnabled() bool
+	Enable()
+	Disable()
+}
+
+type post struct {
+	uuid        uuid.UUID
+	author      entity.User
+	title, body string
+	enabled     bool
+}
+
+func NewPost(id uuid.UUID, author entity.User, title, body string) Post {
+	return &post{
+		uuid:    id,
+		author:  author,
+		title:   title,
+		body:    body,
+		enabled: true,
+	}
+}
+
+func (p *post) GetUUID() uuid.UUID {
+	return p.uuid
+}
+
+func (p *post) GetBody() string {
+	return p.body
+}
+
+func (p *post) GetTitle() string {
+	return p.title
+}
+
+func (p *post) GetAuthor() entity.User {
+	return p.author
+}
+
+func (p *post) Update(title, body string) {
+	p.title = title
+	p.body = body
+}
+
+func (p *post) Enable() {
+	p.enabled = true
+}
+
+func (p *post) Disable() {
+	p.enabled = false
+}
+
+func (p *post) IsEnabled() bool {
+	return p.enabled
+}
+
+----
+
+
+.To HTML
+----
+docker run -d --name plantuml -p 8081:8080 plantuml/plantuml-server:jetty
+PLANTUML_URL="http://127.0.0.1:8081" asciidoctor  -r asciidoctor-plantuml  -r asciidoctor-diagram README.adoc
+
+----
 
 .TODO:
 * mock specification factories
