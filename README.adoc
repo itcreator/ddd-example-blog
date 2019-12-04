@@ -1,11 +1,56 @@
 = ddd-example-blog
+.asciidoctor-diagram
+.asciidoctor-plantuml
+:author: Vital Leshchyk
+:email: vitalleshchyk@gmail.com
+:icons: font
+//:source-highlighter: coderay
+//:source-highlighter: rouge
+:source-highlighter: pygments
+//:source-highlighter: prettify
+//:source-highlighter: highlightjs
+:data-uri:
+:allow-uri-read:
+//:asciidoctor-plantuml:
+//:asciidoctor-diagram:
+:shared-head: ololo
+:docinfo:
+:toc: macro
+//:toc: left
+:toc-title: Table of Contents. Click to navigate
+:toclevels: 4
+//include::locale/attributes.adoc[]
 
-----
-It is example blog created according DDD approach
-----
 
-To view diagrams please install PlantUML plugin for your IDE
 
+CAUTION: {doctitle} is an example
+
+
+toc::[]
+<<<
+
+== Intro
+
+
+//page break
+<<<
+
+:sectnums:
+== zzz
+
+sdfsdf
+
+== ddd
+
+WARNING: It is example blog created according DDD approach
+
+
+NOTE: To view diagrams please install PlantUML plugin for your IDE
+
+IMPORTANT: zzzz
+
+
+TIP: some tip
 
 
 [plantuml]
@@ -33,15 +78,12 @@ plantuml::./docs/uml/usecaces/post.puml[format="svg"]
 
 UseCase diagram as lint to puml proxy (image):
 
+Branch:
+
 image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/feature/ascii-doc-example/docs/uml/usecaces/post.puml[]
 
+Commit:
 image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/8224a1a0cd74896e11ba4c0f15465375b92ff53e/docs/uml/usecaces/comment.puml[]
-
-
-== Hash _<hash_number>_
-
-image::http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/itcreator/ddd-example-blog/_<hash_number>_/docs/uml/usecaces/comment.puml[]
-
 
 
 
@@ -55,7 +97,7 @@ package entity
 import (
 	"github.com/google/uuid"
 	"user/model/entity"
-)
+)// <1>
 
 type Post interface {
 	GetUUID() uuid.UUID
@@ -119,7 +161,7 @@ func (p *post) IsEnabled() bool {
 }
 
 ----
-
+<1> import packages
 
 .To HTML
 ----
@@ -129,5 +171,5 @@ PLANTUML_URL="http://127.0.0.1:8081" asciidoctor  -r asciidoctor-plantuml  -r as
 ----
 
 .TODO:
-* mock specification factories
-* solve foreign dependencies (replace uuid to BL type)
+* [*] mock specification factories
+* [ ] solve foreign dependencies (replace uuid to BL type)
